@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/png" href="assets/image/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Les petits plats</title>
+</head>
+<body class="relative p-6">
+    <header class="w-full flex justify-center">
+        <div class="mx-auto flex flex-col justify-center w-3/12 pb-8">
+            <img src="./assets/image/logo.png" alt="logo les petits plats" class="w-2/12 mx-auto">
+            <h1 class="mx-auto">Les petits plats</h1>
+        </div>
+    </header>
+    <input type="text" placeholder="Rechercher" id="Search" class="w-full bg-gray-300 pb-6 border border-gray-100 rounded-md shadow-sm">
+    <div id="listTags"></div>
+    <div id="filterContainer">
+        <div class="relative inline-block text-left" id="filterIngredient">
+            <div>
+              <button type="button" id="dropBtn" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                Ingrédients
+                <!-- Heroicon name: solid/chevron-down -->
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+            <div id="IngOpt" class="origin-top-right absolute mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div class="py-1" role="none">
+                <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
+                <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
+                <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
+                <form method="POST" action="#" role="none">
+                  <button type="submit" class="text-gray-700 block w-full text-left px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <select name="Appareil" id="filterAppareil">
+            <option value=""></option>
+        </select>
+        <select name="Ustensiles" id="filterUstensils">
+            <option value=""></option>
+        </select>
+    </div>
+    <div id="receiptContainers">
+
+    </div>
+</body>
+<script src="/scripts/index.js"></script>
+</html>
