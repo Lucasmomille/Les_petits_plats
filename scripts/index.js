@@ -1,5 +1,5 @@
 import { getRecipes, getAppliance } from './utils/functions.js';
-import Receipt from './recipeClass.js';
+import Recipe from './recipeClass.js';
 
 const data = await getRecipes();
 console.log('data', data)

@@ -5,11 +5,11 @@ async function getRecipes() { // get recipes' info
     return response.json();
 }
 
-function getAppliance(receipts) {
+function getAppliance(recipes) {
     // get all appliance
    // console.log('appli', data.map(r => r.appliance))
    // keep only one of each
-   console.log('appliance', receipts.map(r => r.appliance.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")))
+   console.log('appliance', recipes.map(r => r.appliance.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")))
 }
 // casserole avec un seul l -> json deux
 export { getRecipes, getAppliance }
