@@ -1,9 +1,10 @@
-import { getRecipes, getAppliance } from './utils/functions.js';
+import { getRecipes, getObjectsForRecipes, displayOptions } from './utils/getDatas.js';
 import Recipe from './recipeClass.js';
 
 const data = await getRecipes();
-console.log('data', data)
-getAppliance(data)
+const { appliances, ustensils, ingredients } = getObjectsForRecipes(data)
+console.log('appliance', ustensils)
+const appliancesContainer = document.getElementById('appliancesContainer')
 // getAppliance();
 // console.log('test', receipts())
 const dropBtn = document.getElementById('dropBtn');
@@ -16,16 +17,16 @@ dropBtn.addEventListener('click', () => {
     }
 })
 
-function recipeFactory(data) {
+function recipeDisplay(data) {
     const container = document.querySelector('#recipesContainer');
     container.innerHTML = '';
-    console.log('hi')
     data.forEach((e) => {
       if (e) {
         container.innerHTML += new Recipe(e).displayRecipe();
     }
-      return undefined;
+      return null;
     });
 }
 
-recipeFactory(data)
+recipeDisplay(data)
+displayOptions(appliancesContainer, appliances);
