@@ -1,7 +1,7 @@
-import { getReceipts, getAppliance } from './utils/functions.js';
-import Receipt from './receiptsClass.js';
+import { getRecipes, getAppliance } from './utils/functions.js';
+import Receipt from './recipeClass.js';
 
-const data = await getReceipts();
+const data = await getRecipes();
 console.log('data', data)
 getAppliance(data)
 // getAppliance();
@@ -16,16 +16,16 @@ dropBtn.addEventListener('click', () => {
     }
 })
 
-function receiptFactory(data) {
-    const container = document.querySelector('#receiptsContainer');
+function recipeFactory(data) {
+    const container = document.querySelector('#recipesContainer');
     container.innerHTML = '';
     console.log('hi')
     data.forEach((e) => {
       if (e) {
-        container.innerHTML += new Receipt(e).displayReceipt();
+        container.innerHTML += new Recipe(e).displayRecipe();
     }
       return undefined;
     });
 }
 
-receiptFactory(data)
+recipeFactory(data)
