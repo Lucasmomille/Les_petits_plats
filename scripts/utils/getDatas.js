@@ -28,16 +28,16 @@ function getObjectsForRecipes(recipes) {
 }
 
 function displayOptions (container, options) {
-    console.log('hi')
     container.innerHTML = '';
     options.forEach((e) => {
       if (e) {
         container.innerHTML += `
-        <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">${e}</a>
+        <li class="options"><a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">${e}</a></li>
         `;
       }
     })
 }
+
 export { getRecipes, getObjectsForRecipes, displayOptions }
 
 // lowar case et accents à mettre pour la recherche uniquement ?
