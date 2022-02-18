@@ -1,3 +1,16 @@
+
+const isQuantity = (e) => {
+  if (e !== undefined){
+    return `: ${e}`
+  }
+  return ''
+}
+const isUnit = (e) => {
+  if (e !== undefined){
+    return e
+  }
+  return ''
+}
 export default class Recipe {
     constructor(recipe) {
       this.name = recipe.name;
@@ -16,6 +29,7 @@ export default class Recipe {
               <div class="flex justify-between mt-1 mb-2">
                 <p>${this.name}</p>
                 <div class="flex">
+                  <img src="./assets/image/time.svg" alt="icone de minuteur" class="mr-2">
                   <span class="font-bold">
                     ${this.time} 
                   </span>
@@ -23,7 +37,7 @@ export default class Recipe {
               </div>
               <div class="flex text-sm h-44 justify-between overflow-hidden">
                 <ul class="w-5/12">
-                    ${this.ingredients.map(e => {return `<li>${e.ingredient}</li>`}).join('')}
+                    ${this.ingredients.map(e => {return `<li><span class="font-bold">${e.ingredient}&nbsp;</span>${isQuantity(e.quantity)+ '&nbsp;' + isUnit(e.unit)}</li>`}).join('')}
                 </ul>
                 <p class="h-full text-ellips w-6/12">
                     ${this.description}

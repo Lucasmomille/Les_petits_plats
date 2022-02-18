@@ -1,62 +1,69 @@
 import { getRecipes, getObjectsForRecipes, displayOptions } from './utils/getDatas.js';
 import Recipe from './recipeClass.js';
-import { filteredData } from './utils/filteredData.js';
+import { filteredData, filterOptions, deleteTag } from './utils/filteredData.js';
 
 const data = await getRecipes();
-const { appliances, ustensils, ingredients } = getObjectsForRecipes(data)
-console.log('appliance', ustensils)
+let dataFiltered = data;
+
+let arrayOfTags = []
+let tagsWithNoDuplicate = []
+
+let allCloseTag = document.querySelectorAll('.closeTag')
+const { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
+
+const allInputs = document.querySelectorAll('.input-container')
+
+const tagsContainer = document.getElementById('tagsContainer');
+
 const appliancesContainer = document.getElementById('appliancesContainer')
 const inputAppliance = document.getElementById('inputAppliance');
-// console.log('test', receipts())
-const dropBtn = document.getElementById('inputAppliance');
-const ingredientsOption = document.getElementById('appliancesOpt');
-/* dropBtn.addEventListener('click', () => {
-    if (ingredientsOption.classList.contains('hidden')) {
-        ingredientsOption.classList.remove('hidden');
-    } else {
-        ingredientsOption.classList.add('hidden');
-    }
-}) */
+
+const ustensilsContainer = document.getElementById('ustensilsContainer')
+const inputUstensil = document.getElementById('inputUstensils')
+
+const ingredientsContainer = document.getElementById('ingredientsContainer')
+const inputIngredient = document.getElementById('inputIngredients')
+
 
 function recipeDisplay(data) {
     const container = document.querySelector('#recipesContainer');
     container.innerHTML = '';
-    data.forEach((e) => {
-      if (e) {
-        container.innerHTML += new Recipe(e).displayRecipe();
-    }
-      return null;
-    });
+    container.innerHTML = data.map(e => new Recipe(e).displayRecipe()).join('')
 }
 
-recipeDisplay(data)
+recipeDisplay(dataFiltered)
+
 displayOptions(appliancesContainer, appliances);
+displayOptions(ustensilsContainer, ustensils);
+displayOptions(ingredientsContainer, ingredients);
 
-
-inputAppliance.addEventListener('keyup', () => {
-    const filter = inputAppliance.value.toUpperCase();
-    const optionOfAppliances = appliancesContainer.getElementsByTagName("li");
-    for (let i = 0; i < optionOfAppliances.length; i++) {
-        let a = optionOfAppliances[i].getElementsByTagName("a")[0];
-        let txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            optionOfAppliances[i].style.display = "";
-        } else {
-            optionOfAppliances[i].style.display = "none";
-        }
-    }
-})
+filterOptions(inputAppliance, appliancesContainer)
+filterOptions(inputUstensil, ustensilsContainer)
+filterOptions(inputIngredient, ingredientsContainer)
 
 const optionOfAppliances = appliancesContainer.querySelectorAll(".options");
-// const optionSelected = optionOfAppliances.getElementsByTagName("a");
-/* optionOfAppliances.forEach(item => {
-    item.addEventListener('click', (e) => {
-        const optionSelected = e.target.innerText.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
-        console.log('click', optionSelected)
-        const filterRecipes = data.filter(r => r.appliance.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").includes(optionSelected))
-        console.log('recfil', filterRecipes)
-        recipeDisplay(filterRecipes)
-    })
-}) */
+const optionOfUstensils = ustensilsContainer.querySelectorAll(".options");
+const optionOfIngredients = ingredientsContainer.querySelectorAll(".options");
 
-filteredData(optionOfAppliances, data, recipeDisplay)
+
+filteredData(optionOfAppliances, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
+filteredData(optionOfUstensils, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
+filteredData(optionOfIngredients, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
+   
+allInputs.forEach(item => {
+    item.addEventListener('click', (e) => {
+        const inputClicked = e.target;
+        const container = inputClicked.parentElement.parentElement
+        // OU closest
+        const containerOption = container.getElementsByTagName('div')[1]
+        if (containerOption.classList.contains('hidden')) {
+            containerOption.classList.remove('hidden');
+        } else {
+            containerOption.classList.add('hidden');
+        }
+    })
+})
+
+
+
+// deleteTag(allCloseTag, dataFiltered, recipeDisplay)
