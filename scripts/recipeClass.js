@@ -1,15 +1,12 @@
-
-const isQuantity = (e) => {
-  if (e !== undefined){
-    return `: ${e}`
-  }
-  return ''
-}
-const isUnit = (e) => {
-  if (e !== undefined){
-    return e
-  }
-  return ''
+function displayIngredients (ingredients) {
+  return ingredients.map(e => {
+    return `
+      <li>
+        <span class="font-bold">${e.ingredient}&nbsp;</span>
+        ${e.quantity ? `: ${e.quantity}`: ''}&nbsp;${e.unit ?? ''}
+      </li>
+    `
+  }).join('')
 }
 export default class Recipe {
     constructor(recipe) {
@@ -37,7 +34,7 @@ export default class Recipe {
               </div>
               <div class="flex text-sm h-44 justify-between overflow-hidden">
                 <ul class="w-5/12">
-                    ${this.ingredients.map(e => {return `<li><span class="font-bold">${e.ingredient}&nbsp;</span>${isQuantity(e.quantity)+ '&nbsp;' + isUnit(e.unit)}</li>`}).join('')}
+                  ${displayIngredients(this.ingredients)}
                 </ul>
                 <p class="h-full text-ellips w-6/12">
                     ${this.description}

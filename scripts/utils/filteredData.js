@@ -1,4 +1,9 @@
 import Tag from '../tagClass.js'
+import { getObjectsForRecipes, displayOptions } from './getDatas.js';
+
+
+let arrayOfTags = []
+let tagsWithNoDuplicate = []
 
 /**
  * Normalisation des chaines de caractères, tableaux compris
@@ -68,44 +73,6 @@ const filterByTags = (data, array) => {
 }
 
 
-function filteredData(selectors, data, dataFiltered, displayFunction, tagContainer, arrayOfTags, tagsWithNoDuplicate, allTags) {
-    selectors.forEach(item => {
-        item.addEventListener('click', (e) => {
-            const optionSelected = normalizeString(e.target.innerText)
-            const container = e.target.parentElement.parentElement.id
-            
-            const tag = {
-                'name': optionSelected,
-                'color': '',
-                'category':''
-            }
-            if (container === 'ustensilsContainer') {
-                tag.color = 'bg-red-400'
-                tag.category = 'ustensils'
-            } else if (container === 'appliancesContainer') {
-                tag.color = 'bg-green-400'
-                tag.category = 'appliance'
-            } else {
-                tag.color = 'bg-blue-400'
-                tag.category = 'ingredients'
-            }
-            // array of tag empty, data = getData ?
-            arrayOfTags.push(tag)
-            // REGARDER au debugger
-            tagsWithNoDuplicate = [...new Map(arrayOfTags.map(tag => [tag.name, tag])).values()]
-            tagContainer.innerHTML = tagsWithNoDuplicate.map(e => new Tag(e).displayTag()).join('')
-            
-            dataFiltered = filterByTags(data, tagsWithNoDuplicate)
-
-            displayFunction(dataFiltered)
-
-            allTags = document.querySelectorAll('.closeTag')
-            // POURQUOI ne fonctionne pas dans index (allTags/close tag non pris en compte, logique mais comment les updater depuis index ?)
-            deleteTag(allTags, dataFiltered, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
-        })
-    })
-}
-
 function filterOptions(input, container) {
     input.addEventListener('keyup', () => {
         const filter = input.value.toUpperCase();
@@ -122,4 +89,83 @@ function filterOptions(input, container) {
     })
 }
 
-export { filteredData, capitalizeFirstLetter, filterOptions, deleteTag }
+
+function filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer, test) {
+    options.forEach(item => {
+        item.addEventListener('click', (e) => {
+            // console.log('click before', options)
+            const optionSelected = normalizeString(e.target.innerText)
+            const container = e.target.parentElement.parentElement.id
+            console.log('test', test)
+            const tag = {
+                'name': optionSelected,
+                'color': ''
+            }
+            if (container === 'ustensilsContainer') {
+                tag.color = 'bg-red-400'
+                tag.category = 'ustensils'
+            } else if (container === 'appliancesContainer') {
+                tag.color = 'bg-green-400'
+                tag.category = 'appliance'
+            } else {
+                tag.color = 'bg-blue-400'
+                tag.category = 'ingredients'
+            }
+            // array of tag empty, data = getData ?
+            arrayOfTags.push(tag)
+
+            const newArrayOfTags = arrayOfTags.map(tag => [tag.name, tag])
+            const mapOfTags = new Map(newArrayOfTags)
+            tagsWithNoDuplicate = [...mapOfTags.values()]
+            tagContainer.innerHTML = tagsWithNoDuplicate.map(e => new Tag(e).displayTag()).join('')
+            
+            dataFiltered = filterByTags([...dataFiltered], tagsWithNoDuplicate)
+
+            /* const { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
+
+            displayOptions(appliancesContainer, appliances);
+            displayOptions(ustensilsContainer, ustensils);
+            displayOptions(ingredientsContainer, ingredients); */
+
+            displayFunction(dataFiltered)
+
+            allTags = document.querySelectorAll('.closeTag')
+            /* options = document.querySelectorAll('.options');
+            console.log('after', options) */
+            deleteTag(allTags, dataFiltered, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
+            // getObjectForRecipes
+            // displayOption
+        })
+    })
+}
+
+// Main Search : ingredients, title, description
+
+function filterMain (data, content) {
+    return data.filter((el) => {
+        const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
+        for (let i = 0; i < dataNormalized.length; i++) {
+            if(dataNormalized[i].indexOf(content) === -1) {
+                i++
+            }
+            return dataNormalized[i].indexOf(content) > -1
+        }
+        
+    }
+); 
+}
+
+function mainSearch (filteredData, data, displayFunction, test) {
+    const searchInput = document.getElementById('Search')
+    test = ['test1', 'test2']
+    searchInput.addEventListener('keyup', () => {
+        const content = searchInput.value.toLowerCase(); 
+        if (content.length > 2){
+            filteredData = filterMain(data, content)
+            console.log('filterd', filteredData)
+            displayFunction(filteredData)
+        }
+    })
+}
+
+export { filteredData, capitalizeFirstLetter, filterOptions, deleteTag, mainSearch }

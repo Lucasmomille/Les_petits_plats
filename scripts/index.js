@@ -1,12 +1,9 @@
 import { getRecipes, getObjectsForRecipes, displayOptions } from './utils/getDatas.js';
 import Recipe from './recipeClass.js';
-import { filteredData, filterOptions, deleteTag } from './utils/filteredData.js';
+import { filteredData, filterOptions, mainSearch } from './utils/filteredData.js';
 
 const data = await getRecipes();
-let dataFiltered = data;
-
-let arrayOfTags = []
-let tagsWithNoDuplicate = []
+let dataFiltered = [...data];
 
 let allCloseTag = document.querySelectorAll('.closeTag')
 const { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
@@ -24,6 +21,7 @@ const inputUstensil = document.getElementById('inputUstensils')
 const ingredientsContainer = document.getElementById('ingredientsContainer')
 const inputIngredient = document.getElementById('inputIngredients')
 
+const test = []
 
 function recipeDisplay(data) {
     const container = document.querySelector('#recipesContainer');
@@ -41,17 +39,20 @@ filterOptions(inputAppliance, appliancesContainer)
 filterOptions(inputUstensil, ustensilsContainer)
 filterOptions(inputIngredient, ingredientsContainer)
 
-const optionOfAppliances = appliancesContainer.querySelectorAll(".options");
-const optionOfUstensils = ustensilsContainer.querySelectorAll(".options");
-const optionOfIngredients = ingredientsContainer.querySelectorAll(".options");
+let options = document.querySelectorAll(".options");
+/* const optionOfUstensils = ustensilsContainer.querySelectorAll(".options");
+const optionOfIngredients = ingredientsContainer.querySelectorAll(".options"); */
 
 
-filteredData(optionOfAppliances, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
-filteredData(optionOfUstensils, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
-filteredData(optionOfIngredients, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag)
+mainSearch(dataFiltered, data, recipeDisplay, test)
+// COMMENT recuperer datafiltered et les options ?
+filteredData(options, data, dataFiltered, recipeDisplay, tagsContainer, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer, test)
+/* filteredData(optionOfUstensils, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer)
+filteredData(optionOfIngredients, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer) */
    
 allInputs.forEach(item => {
     item.addEventListener('click', (e) => {
+        console.log('options', e.target)
         const inputClicked = e.target;
         const container = inputClicked.parentElement.parentElement
         // OU closest
@@ -64,6 +65,20 @@ allInputs.forEach(item => {
     })
 })
 
+// close options if click outside and they're open
+window.addEventListener('mouseup', function(e){
+    allInputs.forEach(item => {
+        for (const i of item.children) {
+            const container = i.closest('.inline-block')
+            const containerOption = container.getElementsByTagName('div')[1]
+            if (e.target !== i && !containerOption.classList.contains('hidden')) {
+                containerOption.classList.add('hidden');
+            } /* else if (e.target === i && containerOption.classList.contains('hidden')) { // DOESN'T WORK
+                containerOption.classList.remove('hidden');
+            } */
+        }
+    })
+});  
 
 
 // deleteTag(allCloseTag, dataFiltered, recipeDisplay)
