@@ -7,6 +7,9 @@ let dataFiltered = [...data];
 
 let allCloseTag = document.querySelectorAll('.closeTag')
 const { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
+let appliancesFiltered = [...appliances]
+let ustensilsFiltered = [...ustensils]
+let ingredientsFiltered = [...ingredients]
 
 const allInputs = document.querySelectorAll('.input-container')
 
@@ -31,28 +34,29 @@ function recipeDisplay(data) {
 
 recipeDisplay(dataFiltered)
 
-displayOptions(appliancesContainer, appliances);
-displayOptions(ustensilsContainer, ustensils);
-displayOptions(ingredientsContainer, ingredients);
+displayOptions(appliancesContainer, appliancesFiltered);
+displayOptions(ustensilsContainer, ustensilsFiltered);
+displayOptions(ingredientsContainer, ingredientsFiltered);
 
 filterOptions(inputAppliance, appliancesContainer)
 filterOptions(inputUstensil, ustensilsContainer)
 filterOptions(inputIngredient, ingredientsContainer)
 
 let options = document.querySelectorAll(".options");
+const allOptions = appliancesFiltered.concat(ustensilsFiltered).concat(ingredientsFiltered)
 /* const optionOfUstensils = ustensilsContainer.querySelectorAll(".options");
 const optionOfIngredients = ingredientsContainer.querySelectorAll(".options"); */
 
 
-mainSearch(dataFiltered, data, recipeDisplay, test)
+// mainSearch(dataFiltered, data, recipeDisplay, test)
 // COMMENT recuperer datafiltered et les options ?
-filteredData(options, data, dataFiltered, recipeDisplay, tagsContainer, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer, test)
+filteredData(options, data, dataFiltered, recipeDisplay, tagsContainer, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer)
 /* filteredData(optionOfUstensils, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer)
 filteredData(optionOfIngredients, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer) */
    
 allInputs.forEach(item => {
     item.addEventListener('click', (e) => {
-        console.log('options', e.target)
+        // console.log('options', e.target)
         const inputClicked = e.target;
         const container = inputClicked.parentElement.parentElement
         // OU closest

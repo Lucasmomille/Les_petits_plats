@@ -89,54 +89,31 @@ function filterOptions(input, container) {
     })
 }
 
+function createTags(tag, container, tagContainer) {
+    if (container === 'ustensilsContainer') {
+        tag.color = 'bg-red-400'
+        tag.category = 'ustensils'
+    } else if (container === 'appliancesContainer') {
+        tag.color = 'bg-green-400'
+        tag.category = 'appliance'
+    } else {
+        tag.color = 'bg-blue-400'
+        tag.category = 'ingredients'
+    }
+    // array of tag empty, data = getData ?
+    arrayOfTags.push(tag)
 
-function filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer, test) {
-    options.forEach(item => {
-        item.addEventListener('click', (e) => {
-            // console.log('click before', options)
-            const optionSelected = normalizeString(e.target.innerText)
-            const container = e.target.parentElement.parentElement.id
-            console.log('test', test)
-            const tag = {
-                'name': optionSelected,
-                'color': ''
-            }
-            if (container === 'ustensilsContainer') {
-                tag.color = 'bg-red-400'
-                tag.category = 'ustensils'
-            } else if (container === 'appliancesContainer') {
-                tag.color = 'bg-green-400'
-                tag.category = 'appliance'
-            } else {
-                tag.color = 'bg-blue-400'
-                tag.category = 'ingredients'
-            }
-            // array of tag empty, data = getData ?
-            arrayOfTags.push(tag)
+    const newArrayOfTags = arrayOfTags.map(tag => [tag.name, tag])
+    const mapOfTags = new Map(newArrayOfTags)
+    tagsWithNoDuplicate = [...mapOfTags.values()]
+    tagContainer.innerHTML = tagsWithNoDuplicate.map(e => new Tag(e).displayTag()).join('')
 
-            const newArrayOfTags = arrayOfTags.map(tag => [tag.name, tag])
-            const mapOfTags = new Map(newArrayOfTags)
-            tagsWithNoDuplicate = [...mapOfTags.values()]
-            tagContainer.innerHTML = tagsWithNoDuplicate.map(e => new Tag(e).displayTag()).join('')
-            
-            dataFiltered = filterByTags([...dataFiltered], tagsWithNoDuplicate)
+}
 
-            /* const { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
+function updateDataFiltered(dataFiltered) {
+    let updateData = [...dataFiltered]
+    return   {updateData }
 
-            displayOptions(appliancesContainer, appliances);
-            displayOptions(ustensilsContainer, ustensils);
-            displayOptions(ingredientsContainer, ingredients); */
-
-            displayFunction(dataFiltered)
-
-            allTags = document.querySelectorAll('.closeTag')
-            /* options = document.querySelectorAll('.options');
-            console.log('after', options) */
-            deleteTag(allTags, dataFiltered, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
-            // getObjectForRecipes
-            // displayOption
-        })
-    })
 }
 
 // Main Search : ingredients, title, description
@@ -152,19 +129,54 @@ function filterMain (data, content) {
         }
         
     }
-); 
-}
+)}
 
-function mainSearch (filteredData, data, displayFunction, test) {
+function mainSearch (dataFiltered, data, displayFunction) {
     const searchInput = document.getElementById('Search')
-    test = ['test1', 'test2']
     searchInput.addEventListener('keyup', () => {
         const content = searchInput.value.toLowerCase(); 
-        if (content.length > 2){
-            filteredData = filterMain(data, content)
-            console.log('filterd', filteredData)
-            displayFunction(filteredData)
+        if (content.length >= 3){
+            dataFiltered = filterMain([...dataFiltered], content)
+            displayFunction(dataFiltered)
+        } else {
+            dataFiltered = [...data]
+            displayFunction(dataFiltered)
         }
+    })
+}
+
+function filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer) {
+    mainSearch(dataFiltered, data, displayFunction)
+
+    options.forEach(item => {
+        item.addEventListener('click', (e) => {
+            const optionSelected = normalizeString(e.target.innerText)
+            const container = e.target.parentElement.parentElement.id
+
+            const tag = { // Create Tag
+                'name': optionSelected,
+                'color': ''
+            }
+
+            createTags(tag, container, tagContainer)
+            
+            dataFiltered = filterByTags([...dataFiltered], tagsWithNoDuplicate)
+            let { updateData } = updateDataFiltered(dataFiltered)
+            const { appliances, ustensils, ingredients } = getObjectsForRecipes(updateData)
+
+            displayOptions(appliancesContainer, appliances);
+            displayOptions(ustensilsContainer, ustensils);
+            displayOptions(ingredientsContainer, ingredients);
+
+            displayFunction(updateData)
+
+            allTags = document.querySelectorAll('.closeTag')
+            options = document.querySelectorAll('.options');
+            filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer)
+            deleteTag(allTags, updateData, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
+            // getObjectForRecipes
+            // displayOption
+        })
     })
 }
 
