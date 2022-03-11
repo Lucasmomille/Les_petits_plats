@@ -12,7 +12,7 @@ let tagsWithNoDuplicate = []
  *
  * @return  {String| Array}     donnée normalisée
  */
-const normalizeString = (s) => {
+export const normalizeString = (s) => {
     if (Array.isArray(s)) {
         return s.map(item => item.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""))
     }
@@ -64,8 +64,7 @@ const filterByIngredients = (data, option) => {
         return normalizeIngredients.includes(option)
     })
 }
-const filterByTags = (data, array) => {
-
+export const filterByTags = (data, array) => {
     return data.filter((el) => {
         const tags = normalizeString([el.appliance].concat(el.ustensils, el.ingredients.map(i => i.ingredient)));
         return array.every(a => tags.includes(a.name));

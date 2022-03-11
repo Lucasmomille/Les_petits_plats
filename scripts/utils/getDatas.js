@@ -21,12 +21,12 @@ function getObjectsForRecipes(recipes) {
    return { appliances, ustensils, ingredients }
 }
 
-function displayOptions (container, options) {
+function displayOptions (container, options, type) {
     container.innerHTML = '';
     options.forEach((e) => {
       if (e) {
         container.innerHTML += `
-        <li class="options"><a href="#" class="text-white block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">${e}</a></li>
+        <li class="options"><a href="#" class="text-white block px-4 py-2 text-sm" data-type='${type}' role="menuitem" tabindex="-1" id="menu-item-0">${e}</a></li>
         `;
       }
     })
