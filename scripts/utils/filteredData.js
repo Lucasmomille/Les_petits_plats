@@ -112,7 +112,7 @@ function createTags(tag, container, tagContainer) {
 
 function updateDataFiltered(dataFiltered) {
     let updateData = [...dataFiltered]
-    return   {updateData }
+    return { updateData }
 
 }
 
@@ -131,13 +131,26 @@ function filterMain (data, content) {
     }
 )}
 
-function mainSearch (dataFiltered, data, displayFunction) {
+function updateOptions (appliancesContainer, ustensilsContainer, ingredientsContainer, options, updateData) {
+    const { appliances, ustensils, ingredients } = getObjectsForRecipes(updateData)
+
+    displayOptions(appliancesContainer, appliances);
+    displayOptions(ustensilsContainer, ustensils);
+    displayOptions(ingredientsContainer, ingredients);
+
+    options = document.querySelectorAll('.options');
+}
+
+function mainSearch (dataFiltered, data, displayFunction, appliancesContainer, ustensilsContainer, ingredientsContainer, options) {
     const searchInput = document.getElementById('Search')
     searchInput.addEventListener('keyup', () => {
         const content = searchInput.value.toLowerCase(); 
         if (content.length >= 3){
-            dataFiltered = filterMain([...dataFiltered], content)
+            let { updateData } = updateDataFiltered(dataFiltered)
+            dataFiltered = filterMain([...updateData], content)
             displayFunction(dataFiltered)
+
+            updateOptions (appliancesContainer, ustensilsContainer, ingredientsContainer, options, updateData)
         } else {
             dataFiltered = [...data]
             displayFunction(dataFiltered)
@@ -146,7 +159,7 @@ function mainSearch (dataFiltered, data, displayFunction) {
 }
 
 function filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer) {
-    mainSearch(dataFiltered, data, displayFunction)
+    mainSearch(dataFiltered, data, displayFunction, appliancesContainer, ustensilsContainer, ingredientsContainer, options)
 
     options.forEach(item => {
         item.addEventListener('click', (e) => {
@@ -162,20 +175,14 @@ function filteredData(options, data, dataFiltered, displayFunction, tagContainer
             
             dataFiltered = filterByTags([...dataFiltered], tagsWithNoDuplicate)
             let { updateData } = updateDataFiltered(dataFiltered)
-            const { appliances, ustensils, ingredients } = getObjectsForRecipes(updateData)
+            
+            // updateOptions (appliancesContainer, ustensilsContainer, ingredientsContainer, options, updateData)
 
-            displayOptions(appliancesContainer, appliances);
-            displayOptions(ustensilsContainer, ustensils);
-            displayOptions(ingredientsContainer, ingredients);
+            displayFunction(updateData);
 
-            displayFunction(updateData)
-
-            allTags = document.querySelectorAll('.closeTag')
-            options = document.querySelectorAll('.options');
-            filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer)
+            allTags = document.querySelectorAll('.closeTag');
             deleteTag(allTags, updateData, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
-            // getObjectForRecipes
-            // displayOption
+            // filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer)
         })
     })
 }
