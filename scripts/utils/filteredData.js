@@ -2,9 +2,6 @@ import Tag from '../tagClass.js'
 import { getObjectsForRecipes, displayOptions } from './getDatas.js';
 
 
-let arrayOfTags = []
-let tagsWithNoDuplicate = []
-
 /**
  * Normalisation des chaines de caractères, tableaux compris
  *
@@ -46,24 +43,6 @@ function deleteTag(allTags, dataFiltered, displayFunction, data, arrayOfTags, ta
     })
 }
 
-const filterByAppliance = (data, option) => {
-    return data = data.filter(r => normalizeString(r.appliance).includes(option))
-}
-
-const filterByUstensils = (data, option) => {
-    return data.filter(r => {
-        const normalizeUstensils = normalizeString(r.ustensils)
-        return normalizeUstensils.includes(option)
-    })
-}
-
-const filterByIngredients = (data, option) => {
-    return data.filter((r) => {
-        const ingredients = r.ingredients.map(i => i.ingredient)
-        const normalizeIngredients = normalizeString(ingredients)
-        return normalizeIngredients.includes(option)
-    })
-}
 export const filterByTags = (data, array) => {
     return data.filter((el) => {
         const tags = normalizeString([el.appliance].concat(el.ustensils, el.ingredients.map(i => i.ingredient)));
@@ -157,33 +136,5 @@ function mainSearch (dataFiltered, data, displayFunction, appliancesContainer, u
     })
 }
 
-function filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer) {
-    mainSearch(dataFiltered, data, displayFunction, appliancesContainer, ustensilsContainer, ingredientsContainer, options)
 
-    options.forEach(item => {
-        item.addEventListener('click', (e) => {
-            const optionSelected = normalizeString(e.target.innerText)
-            const container = e.target.parentElement.parentElement.id
-
-            const tag = { // Create Tag
-                'name': optionSelected,
-                'color': ''
-            }
-
-            createTags(tag, container, tagContainer)
-            
-            dataFiltered = filterByTags([...dataFiltered], tagsWithNoDuplicate)
-            let { updateData } = updateDataFiltered(dataFiltered)
-            
-            // updateOptions (appliancesContainer, ustensilsContainer, ingredientsContainer, options, updateData)
-
-            displayFunction(updateData);
-
-            allTags = document.querySelectorAll('.closeTag');
-            deleteTag(allTags, updateData, displayFunction, data, arrayOfTags, tagsWithNoDuplicate)
-            // filteredData(options, data, dataFiltered, displayFunction, tagContainer, allTags, appliancesContainer, ustensilsContainer, ingredientsContainer)
-        })
-    })
-}
-
-export { filteredData, capitalizeFirstLetter, filterOptions, deleteTag, mainSearch }
+export { capitalizeFirstLetter, filterOptions, deleteTag, mainSearch }

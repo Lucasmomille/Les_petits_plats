@@ -1,16 +1,15 @@
-import { getRecipes, getObjectsForRecipes, displayOptions } from './utils/getDatas.js';
+import { getRecipes, getObjectsForRecipes, displayOptions, setTag } from './utils/getDatas.js';
 import Recipe from './recipeClass.js';
-import { filteredData, filterOptions, normalizeString, filterByTags } from './utils/filteredData.js';
+import { filterOptions, normalizeString, filterByTags } from './utils/filteredData.js';
+// import { updateOptions, updateRecipesElements } from './utils/updateData.js';
 import Tag from "./tagClass.js";
 
 const data = await getRecipes();
+console.log('data', data)
 let dataFiltered = [...data];
-let arrayOfTags = []
-let allCloseTag = document.querySelectorAll('.closeTag')
-let { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered)
-let appliancesFiltered = [...appliances]
-let ustensilsFiltered = [...ustensils]
-let ingredientsFiltered = [...ingredients]
+let arrayOfTags = [];
+let allCloseTag = document.querySelectorAll('.closeTag');
+let { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered);
 
 const allInputs = document.querySelectorAll('.input-container')
 
@@ -25,19 +24,16 @@ const inputUstensil = document.getElementById('inputUstensils')
 const ingredientsContainer = document.getElementById('ingredientsContainer')
 const inputIngredient = document.getElementById('inputIngredients')
 
-const test = []
 
 function recipeDisplay(data) {
     const container = document.querySelector('#recipesContainer');
     container.innerHTML = '';
     if (!data.length){
-        console.log('empty')
-        container.innerHTML = 
-        `<span>Aucune recette ne correspond à votre critère… vous pouvez chercher 'tarte aux pommes', 'poisson', etc.</span>`
+        return container.innerHTML = 
+        `<span class="absolute top-0 left-0">Aucune recette ne correspond à votre critère… vous pouvez chercher 'tarte aux pommes', 'poisson', etc.</span>`
     }
     container.innerHTML = data.map(e => new Recipe(e).displayRecipe()).join('')
 
-        // if datafiltered empty, 'aucune resultat correspond à votre recherche'
 }
 
 recipeDisplay(dataFiltered)
@@ -51,24 +47,13 @@ filterOptions(inputUstensil, ustensilsContainer)
 filterOptions(inputIngredient, ingredientsContainer)
 
 const options = document.querySelectorAll(".options");
-const allOptions = appliancesFiltered.concat(ustensilsFiltered).concat(ingredientsFiltered)
-/* const optionOfUstensils = ustensilsContainer.querySelectorAll(".options");
-const optionOfIngredients = ingredientsContainer.querySelectorAll(".options"); */
-
-
-// mainSearch(dataFiltered, data, recipeDisplay, test)
-// COMMENT recuperer datafiltered et les options ?
-//filteredData(options, data, dataFiltered, recipeDisplay, tagsContainer, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer)
-/* filteredData(optionOfUstensils, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer)
-filteredData(optionOfIngredients, data, dataFiltered, recipeDisplay, tagsContainer, arrayOfTags, tagsWithNoDuplicate, allCloseTag, appliancesContainer, ustensilsContainer, ingredientsContainer) */
 
 allInputs.forEach(item => {
     item.addEventListener('click', (e) => {
-        // console.log('options', e.target)
         const inputClicked = e.target;
         const container = inputClicked.parentElement.parentElement
-        // OU closest
         const containerOption = container.getElementsByTagName('div')[1]
+
         if (containerOption.classList.contains('hidden')) {
             containerOption.classList.remove('hidden');
         } else {
@@ -91,46 +76,22 @@ window.addEventListener('mouseup', function(e){
         }
     })
 });
+
 listenToClickOnTags(options)
 
-function setTagColor(e, tag) {
-    switch (e.target.dataset.type) {
-        case 'ustensils':
-            tag.color = 'bg-red-400'
-            break
-        case 'appliance':
-            tag.color = 'bg-green-400'
-            break
-        case 'ingredients':
-            tag.color = 'bg-blue-400'
-            break
-        default:
-            console.error('error setting tag color', e.target.dataset)
-    }
-}
-
-function setTag(e) {
-    const tagElt = e.target.dataset.type ? e.target : e.target.firstElementChild
-    const tagName = normalizeString(tagElt.innerText)
-    const tag = {name: tagName, category: e.target.dataset.type}
-    setTagColor(e, tag);
-    return tag;
-}
-
-function updateOptions(dataFiltered) {
+const updateOptions = () => {
     const opts = getObjectsForRecipes(dataFiltered);
     ustensils = opts.ustensils;
     appliances = opts.appliances;
     ingredients = opts.ingredients;
 }
-function updateRecipesElements() {
+// IF IN UPDATE FILE WITH PARAMETERS NOT WORK
+const updateRecipesElements = () => {
     dataFiltered = [...filterByTags(data, arrayOfTags)]
-    updateOptions(dataFiltered)
+    updateOptions()
 }
-
 function displayInterface() {
     recipeDisplay(dataFiltered)
-
     displayOptions(appliancesContainer, appliances, 'appliance');
     displayOptions(ustensilsContainer, ustensils, 'ustensils');
     displayOptions(ingredientsContainer, ingredients, 'ingredients');
@@ -147,7 +108,7 @@ function listenToClickOnTags(options){
             arrayOfTags.push(tag)
             arrayOfTags = [...new Set(arrayOfTags)]
             tagsContainer.innerHTML = arrayOfTags.map(e => new Tag(e).displayTag()).join('')
-            // if searchinput.value.lengths >= 3 datafiltered
+            
             updateRecipesElements();
             displayInterface();
             let options = document.querySelectorAll(".options");
@@ -197,13 +158,13 @@ function mainSearch () {
     const searchInput = document.getElementById('Search')
     searchInput.addEventListener('keyup', () => {
         const content = normalizeString(searchInput.value); 
-        console.log('content', content)
         if (content.length >= 3){
-            dataFiltered = filterMain([...data], content)
-            updateOptions(dataFiltered);
+            dataFiltered = filterMain([...dataFiltered], content)
+            updateOptions();
             displayInterface();
         } else {
-            dataFiltered = [...data]
+            dataFiltered = [...dataFiltered]
+            updateOptions();
             displayInterface()
         }
         let options = document.querySelectorAll(".options");
