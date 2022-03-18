@@ -1,15 +1,19 @@
-import { getRecipes, getObjectsForRecipes, displayOptions, setTag } from './utils/getDatas.js';
-import Recipe from './recipeClass.js';
-import { filterOptions, normalizeString, filterByTags } from './utils/filteredData.js';
-// import { updateOptions, updateRecipesElements } from './utils/updateData.js';
+import { getRecipes, getObjectsForRecipes, setTag } from './utils/getDatas.js';
+import { displayOptions, recipeDisplay } from './utils/displayFunctions.js';
+import { filterOptions, filterByTags, filterValueByMainInput } from './utils/filterData.js';
+import { normalizeString } from './utils/normalize.js'
+// import { updateOptions } from './utils/updateData.js';
 import Tag from "./tagClass.js";
 
+let mainSearchLength = 0
 const data = await getRecipes();
 console.log('data', data)
 let dataFiltered = [...data];
 let arrayOfTags = [];
 let allCloseTag = document.querySelectorAll('.closeTag');
 let { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered);
+
+const searchInput = document.getElementById('Search')
 
 const allInputs = document.querySelectorAll('.input-container')
 
@@ -25,16 +29,6 @@ const ingredientsContainer = document.getElementById('ingredientsContainer')
 const inputIngredient = document.getElementById('inputIngredients')
 
 
-function recipeDisplay(data) {
-    const container = document.querySelector('#recipesContainer');
-    container.innerHTML = '';
-    if (!data.length){
-        return container.innerHTML = 
-        `<span class="absolute top-0 left-0">Aucune recette ne correspond à votre critère… vous pouvez chercher 'tarte aux pommes', 'poisson', etc.</span>`
-    }
-    container.innerHTML = data.map(e => new Recipe(e).displayRecipe()).join('')
-
-}
 
 recipeDisplay(dataFiltered)
 
@@ -79,17 +73,13 @@ window.addEventListener('mouseup', function(e){
 
 listenToClickOnTags(options)
 
-const updateOptions = () => {
-    const opts = getObjectsForRecipes(dataFiltered);
+const updateOptions = (data) => {
+    const opts = getObjectsForRecipes(data);
     ustensils = opts.ustensils;
     appliances = opts.appliances;
     ingredients = opts.ingredients;
 }
-// IF IN UPDATE FILE WITH PARAMETERS NOT WORK
-const updateRecipesElements = () => {
-    dataFiltered = [...filterByTags(data, arrayOfTags)]
-    updateOptions()
-}
+
 function displayInterface() {
     recipeDisplay(dataFiltered)
     displayOptions(appliancesContainer, appliances, 'appliance');
@@ -109,7 +99,9 @@ function listenToClickOnTags(options){
             arrayOfTags = [...new Set(arrayOfTags)]
             tagsContainer.innerHTML = arrayOfTags.map(e => new Tag(e).displayTag()).join('')
             
-            updateRecipesElements();
+            dataFiltered = [...filterByTags(dataFiltered, arrayOfTags)];
+            updateOptions(dataFiltered)
+
             displayInterface();
             let options = document.querySelectorAll(".options");
 
@@ -132,7 +124,9 @@ function deleteTag() {
             arrayOfTags.splice(arrayOfTags.findIndex(v => v.name === tagName), 1)
 
             // Display filtered recipes
-            updateRecipesElements();
+            dataFiltered = [...filterByTags(data, arrayOfTags)];
+            dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
+            updateOptions(dataFiltered)
             displayInterface();
             
             allCloseTag = document.querySelectorAll('.closeTag')
@@ -142,34 +136,17 @@ function deleteTag() {
     })
 }
 
-function filterMain (data, content) {
-    return data.filter((el) => {
-        const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
-        for (let i = 0; i < dataNormalized.length; i++) {
-            if(dataNormalized[i].indexOf(content) === -1) {
-                i++
-            }
-            return dataNormalized[i].indexOf(content) > -1
-        }
-    }
-)}
-
 function mainSearch () {
-    const searchInput = document.getElementById('Search')
     searchInput.addEventListener('keyup', () => {
-        const content = normalizeString(searchInput.value); 
-        if (content.length >= 3){
-            dataFiltered = filterMain([...dataFiltered], content)
-            updateOptions();
-            displayInterface();
-        } else {
-            dataFiltered = [...dataFiltered]
-            updateOptions();
-            displayInterface()
-        }
+        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
+
+        updateOptions(dataFiltered);
+        displayInterface()
+
         let options = document.querySelectorAll(".options");
         listenToClickOnTags(options)
     })
+    
 }
 
 mainSearch()

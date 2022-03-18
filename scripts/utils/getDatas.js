@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, normalizeString } from './filteredData.js';
+import { capitalizeFirstLetter, normalizeString } from './normalize.js';
 
 async function getRecipes() { // get recipes' info
     const response = await fetch('./../../assets/data/recipes.json');
@@ -18,17 +18,6 @@ function getObjectsForRecipes(recipes) {
    const ingredients = [...new Set(singleArrayOfIngredients)];
 
    return { appliances, ustensils, ingredients }
-}
-
-function displayOptions (container, options, type) {
-    container.innerHTML = '';
-    options.forEach((e) => {
-      if (e) {
-        container.innerHTML += `
-        <li class="options"><a href="#" class="text-white block px-4 py-2 text-sm" data-type='${type}' role="menuitem" tabindex="-1" id="menu-item-0">${e}</a></li>
-        `;
-      }
-    })
 }
 
 function setTagColor(e, tag) {
@@ -55,4 +44,4 @@ function setTag(e) {
   return tag;
 }
 
-export { getRecipes, getObjectsForRecipes, displayOptions, setTag }
+export { getRecipes, getObjectsForRecipes, setTag }
