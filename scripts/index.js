@@ -142,4 +142,49 @@ function mainSearch () {
     
 }
 
-mainSearch()
+//mainSearch()
+
+function loopMainSearch () {
+    searchInput.addEventListener('keyup', () => {
+        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
+
+        updateOptions(dataFiltered);
+        displayInterface()
+
+        let options = document.querySelectorAll(".options");
+        listenToClickOnTags(options)
+    })
+}
+loopMainSearch()
+/* function filterMain (data, content) {
+    return data.filter((el) => {
+        const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
+        for (let i = 0; i < dataNormalized.length; i++) {
+            if(dataNormalized[i].indexOf(content) === -1) {
+                i++
+            }
+            return dataNormalized[i].indexOf(content) > -1
+        }
+    }
+)} */
+function concatWithLoop(first, second) {
+    for(let i=0; i<second.length; i++) {
+        first.push(second[i]);
+      }
+      return first;
+}
+
+function removeDuplicates(array) { // not working array of object
+    const result = [];
+    const map = {};
+  
+    for (let i = 0; i < array.length; i++) {
+      if (map[array[i]]) {
+        continue;
+      } else {
+        result.push(array[i]);
+        map[array[i]] = true;
+      }
+    }
+    return result;
+  }

@@ -25,7 +25,7 @@ function filterOptions(input, container) {
     })
 }
 
-function filterMain (data, content) {
+/* function filterMain (data, content) {
     return data.filter((el) => {
         const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
         for (let i = 0; i < dataNormalized.length; i++) {
@@ -35,7 +35,40 @@ function filterMain (data, content) {
             return dataNormalized[i].indexOf(content) > -1
         }
     }
-)}
+)} */
+
+function loopFilterMain (data, content) {
+    
+    let arrayName = []
+    let arrayDescription = []
+    let arrayIngredients = []
+    let fieldOfSearch = []
+    let normalizedContent = normalizeString(content)
+    let dataFiltered = []
+
+    for (let recipe of data) {
+        arrayName.push(recipe.name);
+        arrayDescription.push(recipe.description)
+
+        if (normalizeString(recipe.name).indexOf(normalizedContent) > -1) {
+            dataFiltered.push(recipe)
+            console.log('name', recipe.name)
+        }
+        if (normalizeString(recipe.description).indexOf(normalizedContent)> -1) {
+            dataFiltered.push(recipe)
+        }
+
+        for (let ingredient of recipe.ingredients) {
+            arrayIngredients.push(ingredient.ingredient)
+            if (normalizeString(ingredient.ingredient).indexOf(normalizedContent) > -1) {
+                dataFiltered.push(recipe)
+            }
+        }
+        
+    }
+    const test = [...new Set(dataFiltered)]
+    console.log('test2', test)
+}
 
 
 function filterValueByMainInput (searchInput, filtered, data, mainSearchLength, arrayOfTags) {
@@ -46,7 +79,7 @@ function filterValueByMainInput (searchInput, filtered, data, mainSearchLength, 
     }
 
     if (content.length >= 3){
-        datafilter = filterMain([...filtered], content)
+        datafilter = loopFilterMain([...filtered], content)
     } else if (arrayOfTags) {
         datafilter = [...filterByTags([...data], arrayOfTags)];
     } else {
