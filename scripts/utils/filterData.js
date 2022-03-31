@@ -1,4 +1,5 @@
 import { normalizeString } from './normalize.js'
+import { updateOptions } from '../index.js';
 
 export const filterByTags = (data, array) => {
     return data.filter((el) => {
@@ -36,7 +37,7 @@ function filterMain (data, content) {
     }
 )}
 
-function filterValueByMainInput (searchInput, filtered, data, mainSearchLength) {
+function filterValueByMainInput (searchInput, filtered, data, mainSearchLength, arrayOfTags) {
     const content = normalizeString(searchInput.value); 
     let datafilter;
     if(content.length < mainSearchLength) {
@@ -45,6 +46,8 @@ function filterValueByMainInput (searchInput, filtered, data, mainSearchLength) 
 
     if (content.length >= 3){
         datafilter = filterMain([...filtered], content)
+    } else if (arrayOfTags) {
+        datafilter = [...filterByTags([...data], arrayOfTags)];
     } else {
         datafilter = [...data]
     }

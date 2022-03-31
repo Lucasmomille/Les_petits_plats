@@ -73,7 +73,7 @@ window.addEventListener('mouseup', function(e){
 
 listenToClickOnTags(options)
 
-const updateOptions = (data) => {
+export const updateOptions = (data) => {
     const opts = getObjectsForRecipes(data);
     ustensils = opts.ustensils;
     appliances = opts.appliances;
@@ -138,7 +138,7 @@ function deleteTag() {
 
 function mainSearch () {
     searchInput.addEventListener('keyup', () => {
-        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
+        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength, arrayOfTags)
 
         updateOptions(dataFiltered);
         displayInterface()
