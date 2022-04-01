@@ -125,7 +125,7 @@ function deleteTag() {
 
             // Display filtered recipes
             dataFiltered = [...filterByTags(data, arrayOfTags)];
-            dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
+            dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength, arrayOfTags)
             updateOptions(dataFiltered)
             displayInterface();
             
