@@ -37,6 +37,7 @@ function filterMain (data, content) {
     }
 )}
 
+
 function filterValueByMainInput (searchInput, filtered, data, mainSearchLength, arrayOfTags) {
     const content = normalizeString(searchInput.value); 
     let datafilter;

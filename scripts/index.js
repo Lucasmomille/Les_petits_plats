@@ -12,6 +12,8 @@ let dataFiltered = [...data];
 let arrayOfTags = [];
 let allCloseTag = document.querySelectorAll('.closeTag');
 let { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered);
+let selectors = {}
+
 
 const searchInput = document.getElementById('Search')
 
@@ -29,16 +31,7 @@ const ingredientsContainer = document.getElementById('ingredientsContainer')
 const inputIngredient = document.getElementById('inputIngredients')
 
 
-
-recipeDisplay(dataFiltered)
-
-displayOptions(appliancesContainer, appliances, 'appliance');
-displayOptions(ustensilsContainer, ustensils, 'ustensils');
-displayOptions(ingredientsContainer, ingredients, 'ingredients');
-
-filterOptions(inputAppliance, appliancesContainer)
-filterOptions(inputUstensil, ustensilsContainer)
-filterOptions(inputIngredient, ingredientsContainer)
+displayInterface()
 
 const options = document.querySelectorAll(".options");
 
