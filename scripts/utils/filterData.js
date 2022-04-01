@@ -37,6 +37,20 @@ function filterOptions(input, container) {
     }
 )} */
 
+function removeDuplicates(originalArray, prop) {
+    var newArray = [];
+    var lookupObject  = {};
+
+    for(var i in originalArray) {
+       lookupObject[originalArray[i][prop]] = originalArray[i];
+    }
+
+    for(i in lookupObject) {
+        newArray.push(lookupObject[i]);
+    }
+     return newArray;
+}
+
 function loopFilterMain (data, content) {
     
     let arrayName = []
@@ -67,7 +81,8 @@ function loopFilterMain (data, content) {
         
     }
     const test = [...new Set(dataFiltered)]
-    console.log('test2', test)
+    const test2 = removeDuplicates(dataFiltered, "id")
+    console.log('test2', test2)
 }
 
 
