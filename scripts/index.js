@@ -1,13 +1,10 @@
 import { getRecipes, getObjectsForRecipes, setTag } from './utils/getDatas.js';
 import { displayOptions, recipeDisplay } from './utils/displayFunctions.js';
 import { filterOptions, filterByTags, filterValueByMainInput } from './utils/filterData.js';
-import { normalizeString } from './utils/normalize.js'
-// import { updateOptions } from './utils/updateData.js';
-import Tag from "./tagClass.js";
+import Tag from "./classes/tagClass.js";
 
 let mainSearchLength = 0
 const data = await getRecipes();
-console.log('data', data)
 let dataFiltered = [...data];
 let arrayOfTags = [];
 let allCloseTag = document.querySelectorAll('.closeTag');

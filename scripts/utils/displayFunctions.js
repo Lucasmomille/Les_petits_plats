@@ -1,4 +1,4 @@
-import Recipe from '../recipeClass.js';
+import Recipe from '../classes/recipeClass.js';
 import { capitalizeFirstLetter } from './normalize.js'
 
 function displayOptions (container, options, type) {

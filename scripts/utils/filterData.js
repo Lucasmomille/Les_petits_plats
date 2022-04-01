@@ -1,5 +1,4 @@
 import { normalizeString } from './normalize.js'
-import { updateOptions } from '../index.js';
 
 export const filterByTags = (data, array) => {
     return data.filter((el) => {
