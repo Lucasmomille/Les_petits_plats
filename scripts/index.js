@@ -1,19 +1,15 @@
 import { getRecipes, getObjectsForRecipes, setTag } from './utils/getDatas.js';
 import { displayOptions, recipeDisplay } from './utils/displayFunctions.js';
 import { filterOptions, filterByTags, filterValueByMainInput } from './utils/filterData.js';
-import { normalizeString } from './utils/normalize.js'
-// import { updateOptions } from './utils/updateData.js';
 import Tag from "./tagClass.js";
 
 let mainSearchLength = 0
 const data = await getRecipes();
-console.log('data', data)
+
 let dataFiltered = [...data];
 let arrayOfTags = [];
 let allCloseTag = document.querySelectorAll('.closeTag');
 let { appliances, ustensils, ingredients } = getObjectsForRecipes(dataFiltered);
-let selectors = {}
-
 
 const searchInput = document.getElementById('Search')
 
@@ -57,9 +53,7 @@ window.addEventListener('mouseup', function(e){
             const containerOption = container.getElementsByTagName('div')[1]
             if (e.target !== i && !containerOption.classList.contains('hidden')) {
                 containerOption.classList.add('hidden');
-            } /* else if (e.target === i && containerOption.classList.contains('hidden')) { // DOESN'T WORK
-                containerOption.classList.remove('hidden');
-            } */
+            }
         }
     })
 });
@@ -100,7 +94,7 @@ function listenToClickOnTags(options){
 
             allCloseTag = document.querySelectorAll('.closeTag')
             deleteTag()
-            mainSearch()
+            loopMainSearch()
             listenToClickOnTags(options)
         })
     })
@@ -113,6 +107,7 @@ function deleteTag() {
             const container = tagClicked.parentElement
             const tagName = container.querySelector('span').innerText
             container.remove()
+
             // Remove tags from all array
             arrayOfTags.splice(arrayOfTags.findIndex(v => v.name === tagName), 1)
 
@@ -129,11 +124,10 @@ function deleteTag() {
     })
 }
 
-
 function loopMainSearch () {
     searchInput.addEventListener('keyup', () => {
-        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength)
-
+        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength, arrayOfTags)
+        
         updateOptions(dataFiltered);
         displayInterface()
 
@@ -142,30 +136,3 @@ function loopMainSearch () {
     })
 }
 loopMainSearch()
-/* function filterMain (data, content) {
-    return data.filter((el) => {
-        const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
-        for (let i = 0; i < dataNormalized.length; i++) {
-            if(dataNormalized[i].indexOf(content) === -1) {
-                i++
-            }
-            return dataNormalized[i].indexOf(content) > -1
-        }
-    }
-)} */
-
-
-function removeDuplicates(array) { // not working array of object
-    const result = [];
-    const map = {};
-  
-    for (let i = 0; i < array.length; i++) {
-      if (map[array[i]]) {
-        continue;
-      } else {
-        result.push(array[i]);
-        map[array[i]] = true;
-      }
-    }
-    return result;
-  }

@@ -1,5 +1,4 @@
 import { normalizeString } from './normalize.js'
-import { updateOptions } from '../index.js';
 
 export const filterByTags = (data, array) => {
     return data.filter((el) => {
@@ -25,28 +24,18 @@ function filterOptions(input, container) {
     })
 }
 
-/* function filterMain (data, content) {
-    return data.filter((el) => {
-        const dataNormalized = normalizeString([el.name].concat(el.description, el.ingredients.map(i => i.ingredient)))
-        for (let i = 0; i < dataNormalized.length; i++) {
-            if(dataNormalized[i].indexOf(content) === -1) {
-                i++
-            }
-            return dataNormalized[i].indexOf(content) > -1
-        }
-    }
-)} */
-
 function removeDuplicates(originalArray, prop) {
-    var newArray = [];
-    var lookupObject  = {};
+    let newArray = [];
+    let lookupObject = {};
 
-    for(var i in originalArray) {
+    for(let i in originalArray) {
        lookupObject[originalArray[i][prop]] = originalArray[i];
     }
 
-    for(i in lookupObject) {
-        newArray.push(lookupObject[i]);
+    if(Object.keys(lookupObject).length !== 0) {
+        for(let i in lookupObject) {
+            newArray.push(lookupObject[i]);
+        }
     }
      return newArray;
 }
@@ -56,7 +45,6 @@ function loopFilterMain (data, content) {
     let arrayName = []
     let arrayDescription = []
     let arrayIngredients = []
-    let fieldOfSearch = []
     let normalizedContent = normalizeString(content)
     let dataFiltered = []
 
@@ -66,7 +54,6 @@ function loopFilterMain (data, content) {
 
         if (normalizeString(recipe.name).indexOf(normalizedContent) > -1) {
             dataFiltered.push(recipe)
-            console.log('name', recipe.name)
         }
         if (normalizeString(recipe.description).indexOf(normalizedContent)> -1) {
             dataFiltered.push(recipe)
@@ -80,15 +67,17 @@ function loopFilterMain (data, content) {
         }
         
     }
-    const test = [...new Set(dataFiltered)]
-    const test2 = removeDuplicates(dataFiltered, "id")
-    console.log('test2', test2)
+
+    const dataNoDuplicate = removeDuplicates(dataFiltered, "id")
+
+    return dataNoDuplicate
 }
 
 
 function filterValueByMainInput (searchInput, filtered, data, mainSearchLength, arrayOfTags) {
     const content = normalizeString(searchInput.value); 
     let datafilter;
+    
     if(content.length < mainSearchLength) {
         datafilter = [...data]
     }

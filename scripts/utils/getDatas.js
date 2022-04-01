@@ -11,7 +11,6 @@ function getObjectsForRecipes(recipes) {
    const allUstensils = recipes.map(r => r.ustensils)
    const singleArrayOfUstensils = capitalizeFirstLetter(allUstensils.flat());
    const ustensils = [...new Set(singleArrayOfUstensils)];
-   // exclure caractère speciaux et number -> "(6)"
 
    const allIngredients = recipes.map(r => r.ingredients.map(i => i.ingredient));
    const singleArrayOfIngredients = allIngredients.flat();
