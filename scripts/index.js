@@ -129,20 +129,6 @@ function deleteTag() {
     })
 }
 
-function mainSearch () {
-    searchInput.addEventListener('keyup', () => {
-        dataFiltered = filterValueByMainInput(searchInput, dataFiltered, data, mainSearchLength, arrayOfTags)
-
-        updateOptions(dataFiltered);
-        displayInterface()
-
-        let options = document.querySelectorAll(".options");
-        listenToClickOnTags(options)
-    })
-    
-}
-
-//mainSearch()
 
 function loopMainSearch () {
     searchInput.addEventListener('keyup', () => {
@@ -167,12 +153,7 @@ loopMainSearch()
         }
     }
 )} */
-function concatWithLoop(first, second) {
-    for(let i=0; i<second.length; i++) {
-        first.push(second[i]);
-      }
-      return first;
-}
+
 
 function removeDuplicates(array) { // not working array of object
     const result = [];
